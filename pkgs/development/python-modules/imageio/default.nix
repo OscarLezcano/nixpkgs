@@ -21,7 +21,6 @@
   imageio-ffmpeg,
   pillow-heif,
   psutil,
-  pydicom,
   tifffile,
 
   # tests
@@ -51,7 +50,7 @@ buildPythonPackage rec {
     owner = "imageio";
     repo = "imageio";
     tag = "v${version}";
-    hash = "sha256-IFcLIEcUpWeCyTKnPCCd1poIzQsIRQ/IcrShYhoxi6w=";
+    hash = "sha256-8wKTcmnep67zBMYgd6Gpr3wRCIrzYaqfytL1o7iBNAk=";
   };
 
   postPatch = lib.optionalString (!stdenv.hostPlatform.isDarwin) ''
@@ -79,7 +78,6 @@ buildPythonPackage rec {
     lytro = [ ];
     numpy = [ ];
     pillow = [ ];
-    pydicom = [ pydicom ];
     simpleitk = [ ];
     spe = [ ];
     swf = [ ];
@@ -101,6 +99,12 @@ buildPythonPackage rec {
   pytestFlags = [ "--test-images=file://${test_images}" ];
 
   disabledTestMarks = [ "needs_internet" ];
+
+  # These tests requiren an older version of pillow
+  disabledTests = [
+    "test_png_16bit"
+    "test_png"
+  ];
 
   # These tests require the old and vulnerable freeimage binaries; skip.
   disabledTestPaths = [ "tests/test_freeimage.py" ];
